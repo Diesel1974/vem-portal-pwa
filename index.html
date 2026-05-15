@@ -114,10 +114,10 @@
     .install-header { text-align: center; margin-bottom: 28px; }
 
     .install-logo {
-      width: clamp(110px, 28vw, 150px);
+      width: clamp(96px, 24vw, 130px);
       height: auto;
       display: block;
-      margin: 0 auto 20px;
+      margin: 0 auto 18px;
     }
 
     .install-firm {
@@ -206,6 +206,20 @@
       color: var(--navy);
       letter-spacing: 0.01em;
     }
+    .card-section + .card-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 14px -18px;
+    }
+    .card-footer {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      text-align: center;
+    }
     .card ol {
       list-style: none;
       counter-reset: step;
@@ -282,32 +296,32 @@
     <button class="install-btn" id="installBtn">Install VEM Portal</button>
 
     <div class="tabs" role="tablist">
-      <div class="tab" role="tab" data-platform="ios">iPhone</div>
-      <div class="tab" role="tab" data-platform="android">Android</div>
+      <div class="tab" role="tab" data-platform="mobile">Mobile</div>
       <div class="tab" role="tab" data-platform="desktop">Desktop</div>
     </div>
 
-    <div class="card" data-card="ios">
-      <h3>Install on iPhone &middot; Safari</h3>
-      <ol>
-        <li>Tap the <strong>Share</strong> button at the bottom of Safari (square with an up arrow).</li>
-        <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
-        <li>Tap <strong>Add</strong> in the top right corner.</li>
-        <li>The VEM icon will appear on your home screen. Tap it any time to open your portal.</li>
-      </ol>
-    </div>
-
-    <div class="card" data-card="android">
-      <h3>Install on Android &middot; Chrome</h3>
-      <ol>
-        <li>Tap the <strong>Install VEM Portal</strong> button above. (If you don't see it, tap the menu <strong>&#8942;</strong> in Chrome and choose <strong>Install app</strong>.)</li>
-        <li>Tap <strong>Install</strong> in the popup.</li>
-        <li>The VEM icon will appear on your home screen. Tap it any time to open your portal.</li>
-      </ol>
+    <div class="card" data-card="mobile">
+      <div class="card-section">
+        <h3>iPhone &middot; Safari</h3>
+        <ol>
+          <li>Tap the <strong>Share</strong> button at the bottom of Safari (square with an up arrow).</li>
+          <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+          <li>Tap <strong>Add</strong> in the top right corner.</li>
+        </ol>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-section">
+        <h3>Android &middot; Chrome</h3>
+        <ol>
+          <li>Tap the <strong>Install VEM Portal</strong> button above. (If you don't see it, tap the menu <strong>&#8942;</strong> in Chrome and choose <strong>Install app</strong>.)</li>
+          <li>Tap <strong>Install</strong> in the popup.</li>
+        </ol>
+      </div>
+      <p class="card-footer">The VEM icon will appear on your home screen. Tap it any time to open your portal.</p>
     </div>
 
     <div class="card" data-card="desktop">
-      <h3>Install on Desktop &middot; Chrome or Edge</h3>
+      <h3>Desktop &middot; Chrome or Edge</h3>
       <ol>
         <li>Look for the install icon in your address bar (small monitor with a down arrow, on the right side).</li>
         <li>Click it, then click <strong>Install</strong>.</li>
@@ -343,7 +357,7 @@
       const isIOS = /iPad|iPhone|iPod/.test(ua) ||
                     (navigator.maxTouchPoints > 1 && /Mac/.test(ua));
       const isAndroid = /Android/.test(ua);
-      const defaultPlatform = isIOS ? 'ios' : (isAndroid ? 'android' : 'desktop');
+      const defaultPlatform = (isIOS || isAndroid) ? 'mobile' : 'desktop';
 
       function activatePlatform(platform) {
         document.querySelectorAll('.tab').forEach(function (t) {
