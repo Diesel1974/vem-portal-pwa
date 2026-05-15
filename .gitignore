@@ -1,0 +1,17 @@
+# Claude Code session state
+.claude/
+
+# Windows / OneDrive cruft
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# OS metadata
+.DS_Store
+
+# Local shortcuts (the production shortcut lives on the Desktop, not in this repo)
+*.url

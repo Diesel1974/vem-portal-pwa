@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1A2744" />
+
+  <!-- iOS PWA support -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="VEM Portal" />
+
+  <!-- iOS home screen icons -->
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512x512.png" />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <title>VEM Client Portal</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Georgia', serif;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .logo {
+      width: clamp(160px, 50vw, 260px);
+      height: auto;
+      display: block;
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.2s forwards;
+    }
+
+    .label {
+      color: #1A2744;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 400;
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.5s forwards;
+    }
+
+    .bar-wrap {
+      width: 120px;
+      height: 2px;
+      background: #e8e8e8;
+      border-radius: 2px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.7s forwards;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0;
+      background: #C9A84C;
+      border-radius: 2px;
+      animation: load 2s ease 0.9s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes load {
+      0%   { width: 0%; }
+      70%  { width: 80%; }
+      90%  { width: 95%; }
+      100% { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <img class="logo" src="icons/icon-512x512.png" alt="Vann Equity Management" />
+    <div class="label">Connecting to your portal&hellip;</div>
+    <div class="bar-wrap"><div class="bar"></div></div>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    }
+
+    setTimeout(function() {
+      window.location.replace(
+        'https://login.orionadvisor.com/login.html?g=3fdf2732-eb7b-49bb-adb7-77f8efb3243c'
+      );
+    }, 2600);
+  </script>
+
+</body>
+</html>
