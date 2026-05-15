@@ -1,7 +1,7 @@
 // VEM Portal — Service Worker
 // Handles offline caching and install behavior
 
-const CACHE_NAME = 'vem-portal-v1';
+const CACHE_NAME = 'vem-portal-v2';
 const ASSETS = [
   './',
   './index.html',

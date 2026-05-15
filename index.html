@@ -23,36 +23,53 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html, body {
-      height: 100%;
-      width: 100%;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Georgia', serif;
+    :root {
+      --navy: #1A2744;
+      --gold: #C9A84C;
+      --bg-soft: #f5f5f7;
+      --text-muted: #6e6e73;
+      --border: #e5e5e7;
     }
 
-    .container {
+    html, body {
+      min-height: 100%;
+      background: #ffffff;
+      color: var(--navy);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 32px;
-      padding: 40px 24px;
-      text-align: center;
+      padding: 32px 20px;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
 
-    .logo {
+    /* ============================================== */
+    /* SCENE: SPLASH (shown when launched as PWA)     */
+    /* ============================================== */
+    .scene-splash {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      text-align: center;
+      font-family: 'Georgia', serif;
+    }
+    body[data-mode="standalone"] .scene-splash { display: flex; }
+
+    .splash-logo {
       width: clamp(160px, 50vw, 260px);
       height: auto;
-      display: block;
       opacity: 0;
       animation: fadeIn 0.6s ease 0.2s forwards;
     }
-
-    .label {
-      color: #1A2744;
+    .splash-label {
+      color: var(--navy);
       font-size: 13px;
       letter-spacing: 0.22em;
       text-transform: uppercase;
@@ -60,7 +77,6 @@
       opacity: 0;
       animation: fadeIn 0.6s ease 0.5s forwards;
     }
-
     .bar-wrap {
       width: 120px;
       height: 2px;
@@ -70,45 +86,312 @@
       opacity: 0;
       animation: fadeIn 0.6s ease 0.7s forwards;
     }
-
     .bar {
       height: 100%;
       width: 0;
-      background: #C9A84C;
+      background: var(--gold);
       border-radius: 2px;
       animation: load 2s ease 0.9s forwards;
     }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
+    @keyframes fadeIn { to { opacity: 1; } }
     @keyframes load {
       0%   { width: 0%; }
       70%  { width: 80%; }
       90%  { width: 95%; }
       100% { width: 100%; }
     }
+
+    /* ============================================== */
+    /* SCENE: INSTALL (shown when opened in browser)  */
+    /* ============================================== */
+    .scene-install {
+      display: none;
+      max-width: 480px;
+      width: 100%;
+    }
+    body[data-mode="browser"] .scene-install { display: block; }
+
+    .install-header { text-align: center; margin-bottom: 28px; }
+
+    .install-logo {
+      width: clamp(110px, 28vw, 150px);
+      height: auto;
+      display: block;
+      margin: 0 auto 20px;
+    }
+
+    .install-firm {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .install-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+      line-height: 1.25;
+    }
+    .install-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    /* Native install button (Android + Desktop Chromium) */
+    .install-btn {
+      display: none;
+      width: 100%;
+      padding: 14px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 18px;
+      letter-spacing: 0.02em;
+      transition: opacity 0.15s ease, transform 0.05s ease;
+    }
+    .install-btn:hover { opacity: 0.92; }
+    .install-btn:active { transform: scale(0.99); }
+    .install-btn[data-available] { display: block; }
+
+    /* Platform tabs */
+    .tabs {
+      display: flex;
+      background: var(--bg-soft);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 16px;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 9px 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 7px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .tab[aria-selected="true"] {
+      background: white;
+      color: var(--navy);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    /* Platform cards */
+    .card {
+      display: none;
+      padding: 18px 18px;
+      background: var(--bg-soft);
+      border-radius: 12px;
+    }
+    .card[data-active] { display: block; }
+
+    .card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--navy);
+      letter-spacing: 0.01em;
+    }
+    .card ol {
+      list-style: none;
+      counter-reset: step;
+    }
+    .card ol li {
+      counter-increment: step;
+      position: relative;
+      padding: 10px 0 10px 36px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--navy);
+      border-bottom: 1px solid var(--border);
+    }
+    .card ol li:last-child { border-bottom: none; padding-bottom: 2px; }
+    .card ol li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 11px;
+      width: 22px;
+      height: 22px;
+      background: var(--navy);
+      color: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card strong { font-weight: 600; }
+
+    .continue-link {
+      display: block;
+      text-align: center;
+      margin-top: 22px;
+      padding: 14px;
+      color: var(--text-muted);
+      font-size: 13px;
+      text-decoration: none;
+      border-top: 1px solid var(--border);
+      transition: color 0.15s ease;
+    }
+    .continue-link:hover { color: var(--navy); }
+
+    .footer-mark {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #b0b0b8;
+      margin-top: 28px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <img class="logo" src="icons/icon-512x512.png" alt="Vann Equity Management" />
-    <div class="label">Connecting to your portal&hellip;</div>
+  <!-- SCENE: SPLASH (post-install, standalone mode only) -->
+  <div class="scene-splash">
+    <img class="splash-logo" src="icons/icon-512x512.png" alt="Vann Equity Management" />
+    <div class="splash-label">Connecting to your portal&hellip;</div>
     <div class="bar-wrap"><div class="bar"></div></div>
   </div>
 
+  <!-- SCENE: INSTALL (browser mode only) -->
+  <div class="scene-install">
+    <div class="install-header">
+      <img class="install-logo" src="icons/icon-512x512.png" alt="Vann Equity Management" />
+      <div class="install-firm">Vann Equity Management</div>
+      <div class="install-title">Add the Client Portal to your home screen</div>
+      <div class="install-sub">One tap to your portal &mdash; no login screen to bookmark, no app store needed.</div>
+    </div>
+
+    <button class="install-btn" id="installBtn">Install VEM Portal</button>
+
+    <div class="tabs" role="tablist">
+      <div class="tab" role="tab" data-platform="ios">iPhone</div>
+      <div class="tab" role="tab" data-platform="android">Android</div>
+      <div class="tab" role="tab" data-platform="desktop">Desktop</div>
+    </div>
+
+    <div class="card" data-card="ios">
+      <h3>Install on iPhone &middot; Safari</h3>
+      <ol>
+        <li>Tap the <strong>Share</strong> button at the bottom of Safari (square with an up arrow).</li>
+        <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+        <li>Tap <strong>Add</strong> in the top right corner.</li>
+        <li>The VEM icon will appear on your home screen. Tap it any time to open your portal.</li>
+      </ol>
+    </div>
+
+    <div class="card" data-card="android">
+      <h3>Install on Android &middot; Chrome</h3>
+      <ol>
+        <li>Tap the <strong>Install VEM Portal</strong> button above. (If you don't see it, tap the menu <strong>&#8942;</strong> in Chrome and choose <strong>Install app</strong>.)</li>
+        <li>Tap <strong>Install</strong> in the popup.</li>
+        <li>The VEM icon will appear on your home screen. Tap it any time to open your portal.</li>
+      </ol>
+    </div>
+
+    <div class="card" data-card="desktop">
+      <h3>Install on Desktop &middot; Chrome or Edge</h3>
+      <ol>
+        <li>Look for the install icon in your address bar (small monitor with a down arrow, on the right side).</li>
+        <li>Click it, then click <strong>Install</strong>.</li>
+        <li>The VEM Portal opens in its own window. Pin it to your taskbar or dock for one-click access.</li>
+      </ol>
+    </div>
+
+    <a href="https://login.orionadvisor.com/login.html?g=3fdf2732-eb7b-49bb-adb7-77f8efb3243c" class="continue-link">
+      Or continue to the portal in this browser &rarr;
+    </a>
+
+    <div class="footer-mark">Secured by Orion Advisor Services</div>
+  </div>
+
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    // 1. Mode detection: installed PWA vs regular browser tab
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true;
+
+    document.body.dataset.mode = isStandalone ? 'standalone' : 'browser';
+
+    if (isStandalone) {
+      // 2a. Installed PWA: brief splash, then redirect to Orion
+      setTimeout(function () {
+        window.location.replace(
+          'https://login.orionadvisor.com/login.html?g=3fdf2732-eb7b-49bb-adb7-77f8efb3243c'
+        );
+      }, 2600);
+    } else {
+      // 2b. Browser: show install instructions for detected platform
+      const ua = navigator.userAgent;
+      const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+                    (navigator.maxTouchPoints > 1 && /Mac/.test(ua));
+      const isAndroid = /Android/.test(ua);
+      const defaultPlatform = isIOS ? 'ios' : (isAndroid ? 'android' : 'desktop');
+
+      function activatePlatform(platform) {
+        document.querySelectorAll('.tab').forEach(function (t) {
+          t.setAttribute('aria-selected', t.dataset.platform === platform ? 'true' : 'false');
+        });
+        document.querySelectorAll('.card').forEach(function (c) {
+          if (c.dataset.card === platform) c.setAttribute('data-active', '');
+          else c.removeAttribute('data-active');
+        });
+      }
+
+      activatePlatform(defaultPlatform);
+
+      document.querySelectorAll('.tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          activatePlatform(tab.dataset.platform);
+        });
+      });
+
+      // 3. Capture the native install prompt (Android Chrome + Desktop Chromium)
+      var deferredPrompt = null;
+      var installBtn = document.getElementById('installBtn');
+
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.setAttribute('data-available', '');
+      });
+
+      installBtn.addEventListener('click', function () {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function () {
+          installBtn.removeAttribute('data-available');
+          deferredPrompt = null;
+        });
+      });
+
+      window.addEventListener('appinstalled', function () {
+        installBtn.removeAttribute('data-available');
+        deferredPrompt = null;
+      });
     }
 
-    setTimeout(function() {
-      window.location.replace(
-        'https://login.orionadvisor.com/login.html?g=3fdf2732-eb7b-49bb-adb7-77f8efb3243c'
-      );
-    }, 2600);
+    // 4. Register service worker (both modes)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js').catch(function () {});
+    }
   </script>
 
 </body>

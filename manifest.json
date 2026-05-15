@@ -2,7 +2,7 @@
   "name": "Vann Equity Management — Client Portal",
   "short_name": "VEM Portal",
   "description": "Secure access to your Vann Equity Management client portal powered by Orion.",
-  "start_url": "https://login.orionadvisor.com/login.html?g=3fdf2732-eb7b-49bb-adb7-77f8efb3243c",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#1A2744",
